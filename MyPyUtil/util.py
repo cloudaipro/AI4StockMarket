@@ -6,7 +6,8 @@ import time
 import sys
 # import torch
 import numpy as np
-
+from contextlib import contextmanager
+import pandas as pd
 from .logconf import logging
 
 log = logging.getLogger(__name__)
@@ -14,13 +15,29 @@ log = logging.getLogger(__name__)
 # log.setLevel(logging.INFO)
 log.setLevel(logging.DEBUG)
 
+@contextmanager
+def show_more_rows(new=sys.maxsize):
+    old_max = pd.options.display.max_rows
+    old_min = pd.options.display.min_rows
+    try:
+        pd.set_option("display.max_rows", new)
+        pd.set_option("display.min_rows", new)
+        yield old_max
+    finally:
+        pd.options.display.max_rows = old_max
+        pd.options.display.min_rows = old_min
+
+
 def is_contained(df, special_value):
     # import pandas as pd
-    if type(df).__name__ == "DataFrame":
-        indices = (df == special_value).any(axis=1)
-        return len(df[indices]) > 0
-    else:
-        return (df == special_value).any()
+    try:
+        if type(df).__name__ == "DataFrame":
+            indices = (df == special_value).any(axis=1)
+            return len(df[indices]) > 0
+        else:
+            return (df == special_value).any()
+    except:
+        return True
 
 def ivmax(l):
     max_value = -sys.maxsize - 1
