@@ -93,13 +93,24 @@ def is_contained(df, special_value):
         return True
 
 def ivmax(l):
-    max_value = -sys.maxsize - 1
+    max_value = -sys.maxsize
     index = 0
     for i, v in enumerate(l):
         if v > max_value:
             max_value = v
             index = i
     return index, max_value
+
+
+def ivmin(l):
+    min_value = sys.maxsize
+    index = 0
+    for i, v in enumerate(l):
+        if v < min_value:
+            min_value = v
+            index = i
+    return index, min_value
+
 
 def importstr(module_str, from_=None):
     """0
