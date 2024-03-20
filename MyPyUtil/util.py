@@ -103,6 +103,15 @@ def ivmax(l):
 
 
 def ivmin(l):
+    """
+    Finds the index and minimum value in a list.
+
+    Parameters:
+        l (list): List of numeric values.
+
+    Returns:
+        tuple: Index of the minimum value and the minimum value itself.
+    """
     min_value = sys.maxsize
     index = 0
     for i, v in enumerate(l):
