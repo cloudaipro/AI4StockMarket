@@ -4,7 +4,7 @@ import pandas as pd
 from math import pi
 from typing import Union
 from bokeh.models.annotations import Title
-from bokeh.plotting import figure, output_file, show, push
+from bokeh.plotting import figure, output_file, show
 from bokeh.io import output_notebook, curdoc
 from bokeh.models import (
     CustomJS,
@@ -479,9 +479,8 @@ class AutoPlot:
         if show_fig:
             if self._jupyter_notebook:
                 output_notebook()
-            show(fig) # alex
-            # save(fig) alex
-            push(fig)
+            show(fig, browser="none", notebook_handle=True)  # alex
+            # save(fig)
 
     def _reindex_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """Resets index of data to obtain integer indexing."""
@@ -578,7 +577,6 @@ class AutoPlot:
         self._backtest_data = temp_data.reindex(
             backtest_price_data.index, method="ffill"
         )
-
 
     def _plot_indicators(self, indicators: dict, linked_fig):
         """Plots indicators based on indicator type. If inidcator type is
