@@ -77,6 +77,7 @@ class AutoPlot:
         self._show_cancelled = True
         self._use_strat_plot_data = False
         self._line_chart = False
+        self._init_min_number = 120
 
         # Modify data index
         if data is not None:
@@ -126,6 +127,7 @@ class AutoPlot:
         show_cancelled: bool = None,
         chart_theme: str = None,
         use_strat_plot_data: bool = False,
+        init_min_number: int = None,
     ) -> None:
         """Configures the plot settings.
 
@@ -202,6 +204,9 @@ class AutoPlot:
             use_strat_plot_data
             if use_strat_plot_data is not None
             else self._use_strat_plot_data
+        )
+        self._init_min_number = (
+            init_min_number if init_min_number is not None else self._init_min_number
         )
 
     def plot(
@@ -1025,20 +1030,36 @@ class AutoPlot:
         colour_map = factor_cmap("change", candle_colours, ["0", "1"])
 
         candle_tooltips = [
-            ("Date", "@date{%b %d %H:%M:%S}"),
-            # ("Open", "@Open{0.0000}"),
-            # ("High", "@High{0.0000}"),
-            # ("Low", "@Low{0.0000}"),
-            ("Close", "@Close{0.0000}"),
+            ("Date", "@date{%b %d %Y}"),
+            ("Open", "@Open{0.00}"),
+            ("High", "@High{0.00}"),
+            ("Low", "@Low{0.00}"),
+            ("Close", "@Close{0.00}"),
         ]
-
-        candle_plot = figure(
-            width=self._ohlc_width,
-            height=self._ohlc_height,
-            tools=self._fig_tools,
-            active_drag="pan",
-            active_scroll="wheel_zoom",
-        )
+        if len(self._data) > self._init_min_number * 2:
+            min_y = min(self._data["Low"][-self._init_min_number:])
+            max_y = max(self._data["High"][-self._init_min_number :])
+            pad = (max_y - min_y) * 0.05
+            candle_plot = figure(
+                width=self._ohlc_width,
+                height=self._ohlc_height,
+                tools=self._fig_tools,
+                x_range=(len(self._data) - self._init_min_number, len(self._data)),  # alex
+                y_range=(
+                    min_y - pad,
+                    max_y + pad,
+                ),
+                active_drag="pan",
+                active_scroll="wheel_zoom",
+            )
+        else:
+            candle_plot = figure(
+                width=self._ohlc_width,
+                height=self._ohlc_height,
+                tools=self._fig_tools,
+                active_drag="pan",
+                active_scroll="wheel_zoom",
+            )
 
         candle_plot.segment(
             "index", "High", "index", "Low", color="black", source=source
