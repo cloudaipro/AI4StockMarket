@@ -520,6 +520,11 @@ def classify_swings(swing_df: pd.DataFrame, tol: int = 0) -> pd.DataFrame:
     -------
     swing_df : pd.DataFrame
         A dataframe containing the classified swings.
+    CSLS: Candles since last swing
+    LL: Lower low, Break through the last low point
+    HL: Higher low, Higher than the last low point
+    HH: Higher high, Break through the last high point
+    LH: Lower high, Lower than the last high point
     """
     # Create copy of swing dataframe
     swing_df = swing_df.copy()

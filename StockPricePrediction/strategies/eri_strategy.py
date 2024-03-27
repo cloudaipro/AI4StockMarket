@@ -6,7 +6,22 @@ import gc
 https://www.whselfinvest.com/en-be/trading-platform/free-trading-signals/15-dr-alexander-elder-ray-bull-power-bear-power
 """
 def create_buy_sell_signals(df, high, low, close, length, prefix="", suffix=""):
+    """
+    Create buy and sell signals based on the ERI strategy.
 
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing the stock market data.
+        high (str): The column name for the high prices.
+        low (str): The column name for the low prices.
+        close (str): The column name for the closing prices.
+        length (int): The length parameter for the ERI indicator.
+        prefix (str, optional): The prefix to be added to the signal column names. Defaults to "".
+        suffix (str, optional): The suffix to be added to the signal column names. Defaults to "".
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing the buy and sell signals.
+
+    """
     # If prefix or suffix is provided, adjust them
     if len(prefix) > 0:
         prefix = prefix + "_"
